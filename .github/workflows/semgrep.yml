@@ -32,6 +32,19 @@ jobs:
           sarif_file: semgrep.report.sarif
         if: always() 
 
+      - name: Upload SARIF to Cortex Cloud 3rd Party AppSec Collector
+        env:
+          CORTEX_API_KEY_ID: ${{ secrets.CORTEX_API_KEY_ID }}
+          CORTEX_API_KEY: ${{ secrets.CORTEX_API_KEY }}
+        run: |
+          # The exact curl command is provided by the Cortex integration wizard. 
+          # It will look similar to this:
+          curl -X POST "https://api-tac-c3.xdr.eu.paloaltonetworks.com/public_api/appsec/v1/collectors/69c23a08d93e7dadbb1fbfa3?repository_id=99ed42d29cb358d63f71d8362985d90d4799bcdb4e3cc10650c2f5ac47f9cb1f&branch_name=${{ github.ref_name }}" \
+            -H "x-xdr-auth-id: $CORTEX_API_KEY_ID" \
+            -H "Authorization: $CORTEX_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d @semgrep.report.sarif
+
       - name: Save SARIF as artifact
         uses: actions/upload-artifact@v4
         with:
