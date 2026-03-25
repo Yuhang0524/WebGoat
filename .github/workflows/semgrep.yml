@@ -25,6 +25,9 @@ jobs:
           semgrep scan \
             --sarif --output=semgrep.report.sarif \
             --config="p/default" 
+            --config="p/security-audit" \
+            --config="p/owasp-top-10" \
+            --metrics=off
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
