@@ -25,7 +25,7 @@ jobs:
       - name: Run Semgrep
         run: |
           semgrep scan \
-            --sarif --output=semgrep.report.sarif \
+            --sarif --output=semgrep.report.sarif.raw \
             --config="p/default" \
             --metrics=off \
             --exclude='*-lock.json' \
