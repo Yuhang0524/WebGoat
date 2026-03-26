@@ -24,8 +24,12 @@ jobs:
         run: |
           semgrep scan \
             --sarif --output=semgrep.report.sarif \
-            --config="p/default" 
-            --metrics=off
+            --config="p/default" \
+            --metrics=off \
+            --exclude='*-lock.json' \
+            --exclude='package.json' \
+            --exclude='requirements.txt' \
+            --exclude='pom.xml'
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
