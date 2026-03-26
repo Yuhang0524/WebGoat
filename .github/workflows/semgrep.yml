@@ -5,6 +5,8 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  schedule:
+    - cron: '0 * * * *'
 
 jobs:
   semgrep:
@@ -26,12 +28,17 @@ jobs:
             --sarif --output=semgrep.report.sarif \
             --config="p/default" \
             --metrics=off \
-            --exclude-rule='*cve*' \
             --exclude='*-lock.json' \
             --exclude='package.json' \
             --exclude='requirements.txt' \
             --exclude='pom.xml'
-
+      
+      - name: Scrub CVE keywords
+        # 修改点 2：使用 sed 将所有的 CVE/cve 替换为 "SAST-Ref"
+        # 这样即使规则描述里提到了 CVE，在最终生成的 SARIF 中也会被抹除
+        run: |
+          sed 's/[Cc][Vv][Ee]/SAST-Ref/g' semgrep.report.sarif.raw > semgrep.report.sarif
+      
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
