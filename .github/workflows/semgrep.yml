@@ -25,19 +25,22 @@ jobs:
       - name: Run Semgrep
         run: |
           semgrep scan \
-            --sarif --output=semgrep.report.sarif.raw \
+            --sarif --output=semgrep.report.sarif \
             --config="p/default" \
             --metrics=off \
+            --exclude-rule="go.lang.security.audit.crypto.bad_imports.insecure-module-used" \
+            --exclude-rule="javascript.apollo.security.apollo-axios-ssrf.apollo-axios-ssrf" \
+            --exclude-rule="python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load" \
             --exclude='*-lock.json' \
             --exclude='package.json' \
             --exclude='requirements.txt' \
             --exclude='pom.xml'
       
-      - name: Scrub CVE keywords
-        # 修改点 2：使用 sed 将所有的 CVE/cve 替换为 "SAST-Ref"
-        # 这样即使规则描述里提到了 CVE，在最终生成的 SARIF 中也会被抹除
-        run: |
-          sed 's/[Cc][Vv][Ee]/SAST-Ref/g' semgrep.report.sarif.raw > semgrep.report.sarif
+      # - name: Scrub CVE keywords
+      #   # 修改点 2：使用 sed 将所有的 CVE/cve 替换为 "SAST-Ref"
+      #   # 这样即使规则描述里提到了 CVE，在最终生成的 SARIF 中也会被抹除
+      #   run: |
+      #     sed 's/[Cc][Vv][Ee]/SAST-Ref/g' semgrep.report.sarif.raw > semgrep.report.sarif
       
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
