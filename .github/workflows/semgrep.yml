@@ -28,9 +28,6 @@ jobs:
             --sarif --output=semgrep.report.sarif \
             --config="p/default" \
             --metrics=off \
-            --exclude-rule="go.lang.security.audit.crypto.bad_imports.insecure-module-used" \
-            --exclude-rule="javascript.apollo.security.apollo-axios-ssrf.apollo-axios-ssrf" \
-            --exclude-rule="python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load" \
             --exclude='*-lock.json' \
             --exclude='package.json' \
             --exclude='requirements.txt' \
